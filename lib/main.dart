@@ -30,7 +30,6 @@ class BMICalculatorScreen extends StatefulWidget {
 }
 
 class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
-
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
 
@@ -47,7 +46,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
     if (weight == null) return 'Please enter a valid number';
     if (weight <= 0) return 'Weight must be greater than 0';
     if (weight > 500) return 'Please enter a realistic weight (≤ 500 kg)';
-    return null; // No error
+    return null;
   }
 
   String? _validateHeight(String? value) {
@@ -56,7 +55,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
     if (height == null) return 'Please enter a valid number';
     if (height <= 0) return 'Height must be greater than 0';
     if (height > 300) return 'Please enter a realistic height (≤ 300 cm)';
-    return null; // No error
+    return null;
   }
 
   String _getBMICategory(double bmi) {
@@ -67,7 +66,6 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
   }
 
   void _calculateBMI() {
-    // Run validation and store any error messages in state
     setState(() {
       _weightError = _validateWeight(_weightController.text);
       _heightError = _validateHeight(_heightController.text);
@@ -85,6 +83,34 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
       _bmiCategory = _getBMICategory(bmi);
       _hasResult = true;
     });
+  }
+
+  Widget _buildReferenceRow(String range, String label) {
+    final bool isActive = label == _bmiCategory;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            range,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+              color: isActive ? Colors.teal : Colors.grey,
+            ),
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+              color: isActive ? Colors.teal : Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -107,7 +133,6 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-
               const SizedBox(height: 24),
 
               const Text(
@@ -117,7 +142,9 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
               const SizedBox(height: 6),
               TextField(
                 controller: _weightController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
                 ],
@@ -129,7 +156,9 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(
-                      color: _weightError != null ? Colors.red : Colors.transparent,
+                      color: _weightError != null
+                          ? Colors.red
+                          : Colors.transparent,
                       width: _weightError != null ? 2 : 0,
                     ),
                   ),
@@ -141,11 +170,11 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                     ),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 14,
+                    horizontal: 16,
+                    vertical: 14,
                   ),
                 ),
               ),
-
               if (_weightError != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 6.0, left: 4.0),
@@ -168,7 +197,9 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
               const SizedBox(height: 6),
               TextField(
                 controller: _heightController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
                 ],
@@ -180,7 +211,9 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(
-                      color: _heightError != null ? Colors.red : Colors.transparent,
+                      color: _heightError != null
+                          ? Colors.red
+                          : Colors.transparent,
                       width: _heightError != null ? 2 : 0,
                     ),
                   ),
@@ -192,7 +225,8 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                     ),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 14,
+                    horizontal: 16,
+                    vertical: 14,
                   ),
                 ),
               ),
@@ -230,31 +264,68 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
               const SizedBox(height: 36),
 
               if (_hasResult)
-                Column(
-                  children: [
-                    const Text(
-                      'Your BMI Result',
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.teal.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Colors.teal.withOpacity(0.3),
+                      width: 1.5,
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      _bmiResult,
-                      style: const TextStyle(
-                        fontSize: 64,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.teal,
+                  ),
+                  child: Column(
+                    children: [
+                      const Text(
+                        'Your BMI Result',
+                        style: TextStyle(fontSize: 14, color: Colors.grey),
                       ),
-                    ),
-                    Text(
-                      _bmiCategory,
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600,
+                      const SizedBox(height: 12),
+                      Text(
+                        _bmiResult,
+                        style: const TextStyle(
+                          fontSize: 64,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.teal,
+                          height: 1.0,
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 8),
+                      Text(
+                        _bmiCategory,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          children: [
+                            const Text(
+                              'BMI Reference',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            _buildReferenceRow('< 18.5', 'Underweight'),
+                            _buildReferenceRow('18.5 – 24.9', 'Normal weight'),
+                            _buildReferenceRow('25.0 – 29.9', 'Overweight'),
+                            _buildReferenceRow('≥ 30.0', 'Obese'),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-
             ],
           ),
         ),
