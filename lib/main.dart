@@ -36,7 +36,28 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
 
   String _bmiResult = '';
   String _bmiCategory = '';
-  bool _hasResult = false; 
+  bool _hasResult = false;
+
+  String? _weightError;
+  String? _heightError;
+
+  String? _validateWeight(String? value) {
+    if (value == null || value.trim().isEmpty) return 'Weight is required';
+    final weight = double.tryParse(value.trim());
+    if (weight == null) return 'Please enter a valid number';
+    if (weight <= 0) return 'Weight must be greater than 0';
+    if (weight > 500) return 'Please enter a realistic weight (≤ 500 kg)';
+    return null; // No error
+  }
+
+  String? _validateHeight(String? value) {
+    if (value == null || value.trim().isEmpty) return 'Height is required';
+    final height = double.tryParse(value.trim());
+    if (height == null) return 'Please enter a valid number';
+    if (height <= 0) return 'Height must be greater than 0';
+    if (height > 300) return 'Please enter a realistic height (≤ 300 cm)';
+    return null; // No error
+  }
 
   String _getBMICategory(double bmi) {
     if (bmi < 18.5) return 'Underweight';
@@ -46,15 +67,21 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
   }
 
   void _calculateBMI() {
+    // Run validation and store any error messages in state
+    setState(() {
+      _weightError = _validateWeight(_weightController.text);
+      _heightError = _validateHeight(_heightController.text);
+    });
+
+    if (_weightError != null || _heightError != null) return;
+
     final double weight = double.parse(_weightController.text.trim());
     final double heightCm = double.parse(_heightController.text.trim());
-
     final double heightM = heightCm / 100;
-
     final double bmi = weight / (heightM * heightM);
 
     setState(() {
-      _bmiResult = bmi.toStringAsFixed(1); // Round to 1 decimal place
+      _bmiResult = bmi.toStringAsFixed(1);
       _bmiCategory = _getBMICategory(bmi);
       _hasResult = true;
     });
@@ -94,19 +121,43 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
                 ],
+                onChanged: (_) => setState(() => _weightError = null),
                 decoration: InputDecoration(
                   hintText: 'e.g. 70',
                   filled: true,
                   fillColor: Colors.grey[100],
-                  border: OutlineInputBorder(
+                  enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
+                    borderSide: BorderSide(
+                      color: _weightError != null ? Colors.red : Colors.transparent,
+                      width: _weightError != null ? 2 : 0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: _weightError != null ? Colors.red : Colors.teal,
+                      width: 2,
+                    ),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16, vertical: 14,
                   ),
                 ),
               ),
+
+              if (_weightError != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 6.0, left: 4.0),
+                  child: Text(
+                    _weightError!,
+                    style: const TextStyle(
+                      color: Colors.redAccent,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
 
               const SizedBox(height: 20),
 
@@ -121,19 +172,42 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
                 ],
+                onChanged: (_) => setState(() => _heightError = null),
                 decoration: InputDecoration(
                   hintText: 'e.g. 175',
                   filled: true,
                   fillColor: Colors.grey[100],
-                  border: OutlineInputBorder(
+                  enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
+                    borderSide: BorderSide(
+                      color: _heightError != null ? Colors.red : Colors.transparent,
+                      width: _heightError != null ? 2 : 0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: _heightError != null ? Colors.red : Colors.teal,
+                      width: 2,
+                    ),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16, vertical: 14,
                   ),
                 ),
               ),
+              if (_heightError != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 6.0, left: 4.0),
+                  child: Text(
+                    _heightError!,
+                    style: const TextStyle(
+                      color: Colors.redAccent,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
 
               const SizedBox(height: 36),
 
