@@ -38,18 +38,18 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
 
   String _bmiResult = '';
   String _bmiCategory = '';
-  bool _hasResult = false; 
+  bool _hasResult = false;
 
-  // null means no error, a string means show it 
+  // null means no error, a string means show it
   String? _weightError;
   String? _heightError;
 
-  // Background color cycling 
+  // Background color cycling
   final List<Color> _backgroundColors = [
     const Color(0xFF0D7377), // 1. Teal
     const Color(0xFF1B4332), // 2. Forest green
     const Color(0xFF3A0CA3), // 3. Deep violet
-    const Color(0xFF8B2252), // 4. Deep rose
+    const Color(0xFFE3F2FD), // 4. Light sky blue (text turns black here)
     const Color(0xFF1A1A2E), // 5. Midnight navy
   ];
 
@@ -78,8 +78,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
     });
   }
 
-
-  // Validates weight 
+  // Validates weight
   String? _validateWeight(String? value) {
     if (value == null || value.trim().isEmpty) return 'Weight is required';
     final weight = double.tryParse(value.trim());
@@ -89,7 +88,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
     return null; // Valid
   }
 
-  // Validates height 
+  // Validates height
   String? _validateHeight(String? value) {
     if (value == null || value.trim().isEmpty) return 'Height is required';
     final height = double.tryParse(value.trim());
@@ -189,7 +188,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
             ? SystemUiOverlayStyle.dark
             : SystemUiOverlayStyle.light,
       ),
-      
+
       // Buttons and text fields keep their own tap behavior automatically
       // inner widgets win Flutter's gesture arena, so they consume their own
       // taps without triggering this parent GestureDetector.
@@ -231,12 +230,17 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                   controller: _weightController,
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
-                  // Restrict input to digits and decimal point only
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
-                  ],
-                  // Clear the error message as soon as the user starts typing
-                  onChanged: (_) => setState(() => _weightError = null),
+                  // Show an error immediately if the input contains non-numeric characters
+                  onChanged: (value) {
+                    setState(() {
+                      if (value.isNotEmpty &&
+                          RegExp(r'[^0-9.]').hasMatch(value)) {
+                        _weightError = 'Please enter a valid number';
+                      } else {
+                        _weightError = null;
+                      }
+                    });
+                  },
                   style: const TextStyle(color: Colors.black87),
                   decoration: InputDecoration(
                     hintText: 'e.g. 70',
@@ -295,10 +299,17 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                   controller: _heightController,
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
-                  ],
-                  onChanged: (_) => setState(() => _heightError = null),
+                  // Show an error immediately if the input contains non-numeric characters
+                  onChanged: (value) {
+                    setState(() {
+                      if (value.isNotEmpty &&
+                          RegExp(r'[^0-9.]').hasMatch(value)) {
+                        _heightError = 'Please enter a valid number';
+                      } else {
+                        _heightError = null;
+                      }
+                    });
+                  },
                   style: const TextStyle(color: Colors.black87),
                   decoration: InputDecoration(
                     hintText: 'e.g. 175',
