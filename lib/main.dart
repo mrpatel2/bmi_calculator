@@ -197,8 +197,10 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
         onTap: _cycleBackground,
         child: SingleChildScrollView(
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 16.0,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -228,8 +230,9 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                 const SizedBox(height: 6),
                 TextField(
                   controller: _weightController,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   // Show an error immediately if the input contains non-numeric characters
                   onChanged: (value) {
                     setState(() {
@@ -260,8 +263,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide(
-                        color:
-                            _weightError != null ? Colors.red : Colors.white,
+                        color: _weightError != null ? Colors.red : Colors.white,
                         width: 2,
                       ),
                     ),
@@ -297,8 +299,9 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                 const SizedBox(height: 6),
                 TextField(
                   controller: _heightController,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   // Show an error immediately if the input contains non-numeric characters
                   onChanged: (value) {
                     setState(() {
@@ -328,8 +331,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide(
-                        color:
-                            _heightError != null ? Colors.red : Colors.white,
+                        color: _heightError != null ? Colors.red : Colors.white,
                         width: 2,
                       ),
                     ),
@@ -370,8 +372,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                   ),
                   child: const Text(
                     'Calculate BMI',
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
 
@@ -393,8 +394,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                       children: [
                         Text(
                           'Your BMI Result',
-                          style:
-                              TextStyle(fontSize: 14, color: _subtleColor),
+                          style: TextStyle(fontSize: 14, color: _subtleColor),
                         ),
                         const SizedBox(height: 12),
                         // Large BMI number
@@ -437,9 +437,10 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                               const SizedBox(height: 8),
                               _buildReferenceRow('< 18.5', 'Underweight'),
                               _buildReferenceRow(
-                                  '18.5 – 24.9', 'Normal weight'),
-                              _buildReferenceRow(
-                                  '25.0 – 29.9', 'Overweight'),
+                                '18.5 – 24.9',
+                                'Normal weight',
+                              ),
+                              _buildReferenceRow('25.0 – 29.9', 'Overweight'),
                               _buildReferenceRow('≥ 30.0', 'Obese'),
                             ],
                           ),
